@@ -1,8 +1,26 @@
-import {encoded, translations} from './data.js'
+import { encoded, translations } from "./data.js";
 
-console.log("Let's rock")
-console.log(encoded, translations)
+function decodeEncodedData(encoded, translations) {
+  const uniqueIds = {};
+  const decodedData = encoded.map((obj) => {
+    const decodedObj = {};
+    for (const key in obj) {
+      if (key.endsWith("Id") && translations[obj[key]] !== undefined) {
+        decodedObj[key.slice(0, -2)] = translations[obj[key]];
+        uniqueIds[obj[key]] = true;
+      } else {
+        decodedObj[key] = obj[key];
+      }
+    }
+    return decodedObj;
+  });
+  const uniqueIdList = Object.keys(uniqueIds);
+  return { decodedData, uniqueIdList };
+}
 
+const { decodedData, uniqueIdList } = decodeEncodedData(encoded, translations);
 
-
-// console.log(decoded)
+console.log("Decoded Data:");
+console.log(decodedData);
+console.log("\nUnique ID List:");
+console.log(uniqueIdList);
